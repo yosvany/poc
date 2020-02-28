@@ -23,7 +23,7 @@ desde un terminal en linux / mac
 
 > export IP=x.x.x.x
 > for p in app1 admin-server config-server eureka-server webflux-app; do gradle -p  ./$p clean assemble;  done
-> docker-compose up -d
+> docker-compose up --build
 
 El "cluster" deberia levantar y podréis acceder a todo en estas urls:
 
