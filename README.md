@@ -22,10 +22,11 @@ buscad la ip local de la maquina (no 127.0.0.1 sino la 172.x.x.x o 192.168.x.x)
 
 
 desde un terminal en linux / mac
-
+```shell
 > export IP=x.x.x.x
 > for p in app1 admin-server config-server eureka-server webflux-app; do gradle -p  ./$p clean assemble;  done
 > docker-compose up --build
+```
 
 El "cluster" deberia levantar y podréis acceder a todo en estas urls:
 
