@@ -1,0 +1,75 @@
+version: "3.7"
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: $LOCAL_IP # la ip de la interfaz de red wifi o cableada, no 127.0.0.1 ni localhost
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  kafka-manager:
+    image: kafkamanager/kafka-manager
+    ports:
+      - 8899:9000
+      - 32770:32770
+    environment:
+      ZK_HOSTS: "zookeeper:2181"
+  eureka-server:
+    build: eureka-server
+    ports:
+      - 8761:8761
+
+  config-server:
+    build: config-server
+    ports:
+      - 8888:8888
+    volumes:
+      - $HOME/Downloads/POC/config-repository:/config-repository
+
+  admin-server:
+    build: admin-server
+    ports:
+      - 9000:9000 
+    environment:
+      WAIT_HOSTS: config-server:8888, eureka-server:8761     
+  app1:
+    build: app1
+    ports:
+      - 8091:8091
+    environment:
+      - EUREKA_SERVICE_URI=http://eureka-server:8761/eureka
+      - ZZ_CONFIG_SERVER_URI=http://config-server:8888
+    environment:
+      WAIT_HOSTS: config-server:8888, eureka-server:8761  
+    restart: always
+
+  webflux-app:
+    build: webflux-app
+    ports:
+      - 8092:8092
+    environment:
+      - EUREKA_SERVICE_URI=http://eureka-server:8761/eureka
+      - ZZ_CONFIG_SERVER_URI=http://config-server:8888
+      - WAIT_HOSTS: config-server:8888, eureka-server:8761  
+    restart: always
+  
+  jaeger-server:
+    image: jaegertracing/all-in-one:1.17
+    ports:
+      - 5775:5775/udp
+      - 6831:6831/udp
+      - 6832:6832/udp
+      - 5778:5778
+      - 16686:16686
+      - 14268:14268
+      - 14250:14250
+      - 9411:9411
+
+# for p in app1 admin-server config-server eureka-server; do gradle -p  ./$p clean assemble;  done
