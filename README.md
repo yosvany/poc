@@ -1,5 +1,7 @@
 # poc
 
+Ejemplo 
+
 -  Spring cloud admin   
 -  Spring cloud Config server
 -  Spring cloud netflix Eureka
@@ -8,15 +10,15 @@
 -  Una app de ejemplo con webflux  y Swagger
 -  Una app de ejemplo con un endpoint rest con swagger
 
-Las dos apps y el admin server se registran en eureka y leen su configuracion desde el config server.
+Las dos apps y el admin esperan a que los dos servicios (eureka y config) estén levantados, se registran en eureka y leen su configuracion desde el config server.
+
 El admin lee las apps desde el eureka y via actuator, extrae informacion de la app en tiempo real que podeis ver haciendo clien en cada una de ellas.
 
-Os lo subo a github y desde alli lo podeis descargar.
 
 Para probarlo, antes debeis tener java, docker y docker-compose instalados luego desde la raiz del proyecto:
 
 
-buscar la ip local de la maquina (no 127.0.0.1 sino la 172.x.x.x o 192.168.x.x)
+buscad la ip local de la maquina (no 127.0.0.1 sino la 172.x.x.x o 192.168.x.x)
 
 
 desde un terminal en linux / mac
